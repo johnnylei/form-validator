@@ -107,4 +107,8 @@ var params = {
 };
 $('#some-form').formValidator(params);
 ```
+```
+var options = form.data('options');
+options.validated == 0 // 验证失败
+```
 
