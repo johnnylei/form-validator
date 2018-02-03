@@ -6,7 +6,7 @@
 $('#some-form').formValidator();
 ```
 
-#基本使用说明
+# 基本使用说明
 ## 最基本的demo
 ```
 <form>
@@ -56,7 +56,7 @@ $('#some-form').formValidator();
 - class number
 - data-pattern里面填写正则表达式
 ```
-#事件
+# 事件
 ```
 var events = {
     // 在init之前触发，由form元素触发
