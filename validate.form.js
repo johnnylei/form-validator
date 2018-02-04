@@ -14,7 +14,8 @@
                     return false;
                 }
 
-                $(this).submit();
+                return false;
+                // $(this).submit();
             });
         });
     };
@@ -113,6 +114,35 @@
             error_field.removeClass('display-none');
             throw new Error();
         },
+        ajax_validate : function() {
+            $(this).trigger(events.beforeValidateField, 'ajax_validate');
+            var url = $(this).data('ajax-validate-url');
+            var form = $(this).parents('form');
+            var field_item = $(this).parents(options.field_item_selector);
+            var error_field = field_item.find(options.error_field_selector);
+            var validate_message;
+            $.ajax({
+                type : "post",
+                url : url,
+                data : form.serialize(),
+                async : false,
+                success : function(data){
+                    validate_message = data;
+                }
+            });
+
+            if (validate_message == 1) {
+                error_field.addClass('display-none');
+                $(this).trigger(events.afterValidateField, 'ajax_validate');
+                return true;
+            }
+
+            $(this).data('error_message', '该字段不符合需求');
+            $(this).trigger(events.afterValidateField, 'ajax_validate');
+            error_field.html($(this).data('error_message'));
+            error_field.removeClass('display-none');
+            throw new Error();
+        },
         beforeValidateField : function() {
 
         },
@@ -125,7 +155,8 @@
         required : '.required',
         number : '.number',
         email : '.email',
-        match : '.match'
+        match : '.match',
+        ajax_validate : '.ajax-validate'
     };
 
     var methods = {
