@@ -14,8 +14,7 @@
                     return false;
                 }
 
-                return false;
-                // $(this).submit();
+                return true;
             });
         });
     };
