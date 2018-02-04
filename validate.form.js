@@ -3,13 +3,13 @@
         if(arguments.length == 0) {
             arguments = [{}];
         }
-
         methods.init.apply($(this), arguments);
         $(this).each(function() {
             $(this).on('submit', function() {
-                var options = $(this).data('options');
-                methods.validate.apply($(this));
-                if(options.validated != 1) {
+                try {
+                    var options = $(this).data('options');
+                    methods.validate.apply($(this));
+                } catch (e) {
                     return false;
                 }
 
@@ -38,9 +38,6 @@
             $(this).trigger(events.beforeValidateField);
             var form = $(this).parents('form');
             var options = form.data('options');
-            if (!options.validated) {
-                return false;
-            }
             var field_item = $(this).parents(options.field_item_selector);
             var error_field = field_item.find(options.error_field_selector);
             if($(this).val() != '') {
@@ -50,17 +47,13 @@
             }
 
             error_field.removeClass('display-none');
-            options.validated = 0;
-            form.data('options', options);
             $(this).trigger(events.afterValidateField);
+            throw new Error();
         },
         number : function() {
             $(this).trigger(events.beforeValidateField);
             var form = $(this).parents('form');
             var options = form.data('options');
-            if (!options.validated) {
-                return false;
-            }
             var field_item = $(this).parents(options.field_item_selector);
             var error_field = field_item.find(options.error_field_selector);
             if($(this).val() % 1 == 0) {
@@ -71,17 +64,13 @@
 
             error_field.html('该字段必须为数字');
             error_field.removeClass('display-none');
-            options.validated = 0;
-            form.data('options', options);
             $(this).trigger(events.afterValidateField);
+            throw new Error();
         },
         email : function() {
             $(this).trigger(events.beforeValidateField);
             var form = $(this).parents('form');
             var options = form.data('options');
-            if (!options.validated) {
-                return false;
-            }
             var field_item = $(this).parents(options.field_item_selector);
             var error_field = field_item.find(options.error_field_selector);
             var value = $(this).val();
@@ -94,17 +83,13 @@
 
             error_field.html('该字段必须为邮箱');
             error_field.removeClass('display-none');
-            options.validated = 0;
-            form.data('options', options);
             $(this).trigger(events.afterValidateField);
+            throw new Error();
         },
         match : function () {
             $(this).trigger(events.beforeValidateField);
             var form = $(this).parents('form');
             var options = form.data('options');
-            if (!options.validated) {
-                return false;
-            }
 
             var field_item = $(this).parents(options.field_item_selector);
             var error_field = field_item.find(options.error_field_selector);
@@ -118,9 +103,8 @@
 
             error_field.html('该字段不符合需求');
             error_field.removeClass('display-none');
-            options.validated = 0;
-            form.data('options', options);
             $(this).trigger(events.afterValidateField);
+            throw new Error();
         },
         beforeValidateField : function() {
 
@@ -136,7 +120,7 @@
         email : '.email',
         match : '.match'
     };
-    
+
     var methods = {
         init : function(params) {
             return $(this).each(function () {
@@ -163,7 +147,6 @@
             var form = $(this);
             form.trigger(events.beforeValidate);
             var options = form.data('options');
-            options.validated = 1;
             form.find(options.need_validate_selector).trigger(events.validateField);
             form.trigger(events.afterValidate);
         }
