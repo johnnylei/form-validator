@@ -37,40 +37,43 @@
 
     var default_field_validator = {
         required : function() {
-            $(this).trigger(events.beforeValidateField);
+            $(this).trigger(events.beforeValidateField, 'required');
             var form = $(this).parents('form');
             var options = form.data('options');
             var field_item = $(this).parents(options.field_item_selector);
             var error_field = field_item.find(options.error_field_selector);
             if($(this).val() != '') {
                 error_field.addClass('display-none');
-                $(this).trigger(events.afterValidateField);
+                $(this).trigger(events.afterValidateField, 'required');
                 return true;
             }
 
+            $(this).data('error_message', '该字段必填');
+            $(this).trigger(events.afterValidateField, ['required']);
+            error_field.html($(this).data('error_message'));
             error_field.removeClass('display-none');
-            $(this).trigger(events.afterValidateField);
             throw new Error();
         },
         number : function() {
-            $(this).trigger(events.beforeValidateField);
+            $(this).trigger(events.beforeValidateField, 'number');
             var form = $(this).parents('form');
             var options = form.data('options');
             var field_item = $(this).parents(options.field_item_selector);
             var error_field = field_item.find(options.error_field_selector);
             if($(this).val() % 1 == 0) {
                 error_field.addClass('display-none');
-                $(this).trigger(events.afterValidateField);
+                $(this).trigger(events.afterValidateField, 'number');
                 return true;
             }
 
-            error_field.html('该字段必须为数字');
+            $(this).data('error_message', '该字段必须为数字');
+            $(this).trigger(events.afterValidateField, ['number']);
+            error_field.html($(this).data('error_message'));
             error_field.removeClass('display-none');
-            $(this).trigger(events.afterValidateField);
             throw new Error();
         },
         email : function() {
-            $(this).trigger(events.beforeValidateField);
+            $(this).trigger(events.beforeValidateField, 'email');
             var form = $(this).parents('form');
             var options = form.data('options');
             var field_item = $(this).parents(options.field_item_selector);
@@ -79,17 +82,18 @@
             var reg = /\w+@\w+\.com/;
             if (reg.test(value)) {
                 error_field.addClass('display-none');
-                $(this).trigger(events.afterValidateField);
+                $(this).trigger(events.afterValidateField, 'email');
                 return true;
             }
 
-            error_field.html('该字段必须为邮箱');
+            $(this).data('error_message', '该字段必须为邮箱');
+            $(this).trigger(events.afterValidateField, 'email');
+            error_field.html($(this).data('error_message'));
             error_field.removeClass('display-none');
-            $(this).trigger(events.afterValidateField);
             throw new Error();
         },
         match : function () {
-            $(this).trigger(events.beforeValidateField);
+            $(this).trigger(events.beforeValidateField, 'match');
             var form = $(this).parents('form');
             var options = form.data('options');
 
@@ -99,13 +103,14 @@
             var pattern = new RegExp($(this).data('pattern'));
             if (pattern.test(value)) {
                 error_field.addClass('display-none');
-                $(this).trigger(events.afterValidateField);
+                $(this).trigger(events.afterValidateField, 'match');
                 return true;
             }
 
-            error_field.html('该字段不符合需求');
+            $(this).data('error_message', '该字段不符合需求');
+            $(this).trigger(events.afterValidateField, 'match');
+            error_field.html($(this).data('error_message'));
             error_field.removeClass('display-none');
-            $(this).trigger(events.afterValidateField);
             throw new Error();
         },
         beforeValidateField : function() {

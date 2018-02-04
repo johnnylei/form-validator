@@ -74,6 +74,7 @@ var events = {
 };
 ```
 # 高级使用
+## 自定义配置
 ```
 var params = {
     form_options : {
@@ -107,4 +108,11 @@ var params = {
 };
 $('#some-form').formValidator(params);
 ```
-
+## 自定义错误信息
+```
+$('xxx-input').on('afterValidateField', function(event, func) {
+    console.log(event);
+    console.log(func);
+    $(this).data('error_message', 'xxxxx');
+});
+```
