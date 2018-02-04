@@ -10,6 +10,7 @@
                     var options = $(this).data('options');
                     methods.validate.apply($(this));
                 } catch (e) {
+                    $(this).trigger(events.validateFailed);
                     return false;
                 }
 
@@ -30,7 +31,8 @@
         afterValidate : 'afterValidate',
         validateField : 'validate.field',
         beforeValidateField : 'beforeValidateField',
-        afterValidateField : 'afterValidateField'
+        afterValidateField : 'afterValidateField',
+        validateFailed : 'validateFailed'
     };
 
     var default_field_validator = {
